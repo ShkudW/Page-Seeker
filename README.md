@@ -32,12 +32,12 @@ It supports scanning websites built with various CMS platforms and searching for
 3. Move the file to this path:
 
     mv geckodriver /usr/local/bin/
-
+    ```
 
 4. Apply full permissions to the File:
 
     sudo chmod +x /usr/local/bin/geckodriver
-
+    ```
 
 
 ## Installation
