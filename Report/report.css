@@ -1,0 +1,130 @@
+/* report.css */
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #2c3e50;
+    font-size: 2.5em;
+    text-align: center;
+}
+
+.copyright {
+    text-align: center;
+    color: #7f8c8d;
+    margin-bottom: 30px;
+}
+
+h2 {
+    border-bottom: 2px solid #2980b9;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    color: #2980b9;
+}
+
+.info-table, .info-table th, .info-table td {
+    border: none;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.info-table th {
+    text-align: left;
+    font-weight: bold;
+}
+
+.info-table td {
+    padding: 8px 0;
+}
+
+button.collapsible {
+    background-color: #3498db;
+    color: white;
+    cursor: pointer;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 18px;
+    margin: 10px 0;
+    border-radius: 5px;
+    transition: background-color 0.2s ease;
+}
+
+button.collapsible:hover {
+    background-color: #2980b9;
+}
+
+button.collapsible.active {
+    background-color: #2980b9;
+}
+
+.content {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    background-color: #ecf0f1;
+    border-radius: 5px;
+}
+
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+}
+
+.content th, .content td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #bdc3c7;
+}
+
+.footer {
+    text-align: center;
+    padding: 20px 0;
+    color: #7f8c8d;
+    font-size: 14px;
+    border-top: 1px solid #bdc3c7;
+    margin-top: 20px;
+}
+
+/* report.css */
+
+/* ... existing styles ... */
+
+.dataframe {
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+.dataframe table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.dataframe th, .dataframe td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.dataframe tr:hover {
+    background-color: #f5f5f5;
+}
+
+
