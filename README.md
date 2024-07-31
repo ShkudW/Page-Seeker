@@ -61,9 +61,8 @@ It supports scanning websites built with various CMS platforms and searching for
 
 ## Usage
 
-To run the tool, use the following command:
 
-//Run the command without root privilege ot without sudo command//
+//Run the Tool without root privilege ot without sudo command//
 
 python3 Web-Seeker.py -url https://target.com -outfile FileName.html -geckodriver /usr/local/bin/geckodriver
 
