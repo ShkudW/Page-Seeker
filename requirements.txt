@@ -1,5 +1,7 @@
-requests
-pandas
-selenium
-termcolor
-pyfiglet
+- Python 3.11 or higher
+- Requests library: `requests==2.31.0`
+- BeautifulSoup4 library: `beautifulsoup4==4.12.2`
+- Lxml library: `lxml==4.9.3`
+- Selenium library: `selenium==4.11.2`
+- WebDriver Manager for Python: `webdriver-manager==4.0.0`
+- tqdm library for progress bars: `tqdm==4.66.1`
