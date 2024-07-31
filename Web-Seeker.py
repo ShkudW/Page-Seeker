@@ -234,28 +234,28 @@ def detect_language(content):
 def generate_html_report(cms, sensitive_data, found_files, errors, output_file, url, ip_address, language, certificate_info):
     # Define color mapping for each type
     type_color_mapping = {
-        'email': '#FFD700',        # Yellow
-        'credentials': '#FF4500',  # Red
-        'hash': '#A9A9A9',         # Gray
-        'ip': '#32CD32',           # Green
-        'username': '#FFA500',     # Orange
-        'password': '#DC143C'      # Crimson
+        'email': '#FFD700',        
+        'credentials': '#FF4500',  
+        'hash': '#A9A9A9',        
+        'ip': '#32CD32',           
+        'username': '#FFA500',     
+        'password': '#DC143C'      
     }
 
-    # Create DataFrames for display
+    
     df_sensitive = pd.DataFrame(sensitive_data, columns=['Type', 'Value', 'File URL'])
     df_files = pd.DataFrame(found_files, columns=['Found Files'])
     df_errors = pd.DataFrame(errors, columns=['Error Message'])
 
-    # Set output directory to 'Report' and ensure it exists
+    
     output_dir = os.path.join(os.path.dirname(__file__), 'Report')
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    # Define path for external CSS file
+    
     css_path = "report.css"
 
-    # Generate HTML content
+    
     html_content = f"""
     <html>
     <head>
@@ -284,7 +284,7 @@ def generate_html_report(cms, sensitive_data, found_files, errors, output_file, 
             <h2>Sensitive Information</h2>
     """
 
-    # Add collapsible sections for each type
+    
     for info_type, color in type_color_mapping.items():
         relevant_data = df_sensitive[df_sensitive['Type'].str.lower() == info_type]
         if not relevant_data.empty:
@@ -325,18 +325,18 @@ def generate_html_report(cms, sensitive_data, found_files, errors, output_file, 
     </html>
     """
 
-    # Write HTML content to file within 'Report' directory
+    
     output_path = os.path.join(output_dir, output_file)
     with open(output_path, 'w') as file:
         file.write(html_content)
 
-# Function to display the banner
+
 def display_banner():
     f = Figlet(font='slant')
     print(colored(f.renderText('Page-Seeker'), 'cyan', attrs=['bold']))
     print(colored('by Shaked Wiessman', 'green'))
 
-# Main script execution
+
 if __name__ == "__main__":
     # Display the banner
     display_banner()
@@ -354,30 +354,30 @@ if __name__ == "__main__":
     timeout = args.timeout
 
     try:
-        # Get the base IP address of the website
+        
         base_ip = socket.gethostbyname(urlparse(website_url).hostname)
 
-        # Identify the CMS
+        
         cms = identify_cms(website_url, timeout)
         print(colored(f"The website is using: {cms}", "blue"))
 
-        # Fetch files based on CMS
+        
         print(colored("Scanning for files...", "yellow"))
         found_files = fetch_dynamic_files(website_url, geckodriver_path)
         print(colored(f"Found {len(found_files)} files via dynamic scanning.", "green"))
 
-        # Perform fuzzing for additional files
+        
         print(colored("Performing fuzzing for additional files...", "yellow"))
         fuzzed_files = fuzz_for_files(website_url, cms, timeout)
         print(colored(f"Found {len(fuzzed_files)} files via fuzzing.", "green"))
 
-        # Combine all found files
+        
         all_found_files = list(set(found_files + fuzzed_files))
 
         sensitive_data = []
         errors = []
 
-        # Attempt to fetch and parse main page content for language and certificate
+        
         try:
             main_page_response = requests.get(website_url, timeout=timeout, verify=False)
             main_page_content = main_page_response.text
@@ -386,7 +386,7 @@ if __name__ == "__main__":
             print(colored(f"Error accessing main page: {e}", "red"))
             language = "Unknown"
 
-        # Placeholder for certificate info (for simplicity)
+        
         certificate_info = "Not implemented"
 
         for file_url in all_found_files:
