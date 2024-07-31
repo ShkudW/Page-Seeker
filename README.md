@@ -47,7 +47,7 @@ It supports scanning websites built with various CMS platforms and searching for
     ```
 2. Apply full permissions to the tool's directory:
     ```
-    sudo chmod 777 Page-Seeker
+    sudo chmod -R 777 Page-Seeker
     ```
 3. Navigate to the project directory:
     ```
