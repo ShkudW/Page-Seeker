@@ -19,20 +19,22 @@ It supports scanning websites built with various CMS platforms and searching for
 ## Side Installation:
 
 1. It is required to download Geckodriver, recommended version (linux64):
-
-    Here is the Link:
+   ```
     https://github.com/mozilla/geckodriver/releases
     ```
+    
 3. After downloading, extract the file:
-
+    ```
     tar -xvzf ./geckodriver-v0.34.0-linux64.tar.gz
     ```
+    
 4. Move the file to this path:
-
+    ```
     mv geckodriver /usr/local/bin/
     ```
+    
 5. Apply full permissions to the File:
-
+    ```
     sudo chmod +x /usr/local/bin/geckodriver
     ```
 
@@ -44,11 +46,11 @@ It supports scanning websites built with various CMS platforms and searching for
     git clone <repository-url>
     ```
 2. Apply full permissions to the tool's directory:
-
+    ```
     sudo chmod 777 Page-Seeker
     ```
 3. Navigate to the project directory:
-    
+    ```
     cd Page-Seeker
     ```
 4. Install the required packages:
