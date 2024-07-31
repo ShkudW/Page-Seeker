@@ -23,18 +23,20 @@ It supports scanning websites built with various CMS platforms and searching for
     Here is the Link:
     https://github.com/mozilla/geckodriver/releases
 
+   
 
-2. After downloading, extract the file:
+
+3. After downloading, extract the file:
 
     tar -xvzf ./geckodriver-v0.34.0-linux64.tar.gz
     ```
 
-3. Move the file to this path:
+4. Move the file to this path:
 
     mv geckodriver /usr/local/bin/
     ```
 
-4. Apply full permissions to the File:
+5. Apply full permissions to the File:
 
     sudo chmod +x /usr/local/bin/geckodriver
     ```
