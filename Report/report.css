@@ -1,4 +1,4 @@
-/* report.css */
+
 
 body {
     font-family: 'Roboto', sans-serif;
@@ -102,10 +102,6 @@ button.collapsible.active {
     border-top: 1px solid #bdc3c7;
     margin-top: 20px;
 }
-
-/* report.css */
-
-/* ... existing styles ... */
 
 .dataframe {
     overflow-x: auto;
