@@ -88,17 +88,17 @@ def identify_cms(url, timeout):
         headers = response.headers
         content = response.text
 
-        # Check headers
+        
         cms = check_headers(headers)
         if cms:
             return cms
 
-        # Check content patterns
+        
         cms = check_patterns(content)
         if cms:
             return cms
 
-        # Check for specific files
+        
         cms = check_files(url, timeout)
         if cms:
             return cms
@@ -154,7 +154,7 @@ def fuzz_for_files(base_url, cms, timeout):
     extensions = ['.txt', '.html', '.js', '.css']
     fuzzing_dir = os.path.join(os.path.dirname(__file__), 'fuzzing')
 
-    
+    # Determine the appropriate wordlist based on the CMS
     if cms == 'WordPress':
         wordlist_file = os.path.join(fuzzing_dir, 'wordpress-fuzz.txt')
     elif cms == 'Joomla':
@@ -220,17 +220,17 @@ def search_sensitive_info(content, base_ip):
 
 
 def detect_language(content):
-    
+    # Basic detection based on common language indicators
     if "<html lang=\"en\"" in content.lower():
         return "English"
     elif "<html lang=\"he\"" in content.lower():
         return "Hebrew"
     elif "<html lang=\"es\"" in content.lower():
         return "Spanish"
-    
+    # Add more languages as needed
     return "Unknown"
 
-
+# Generate HTML report
 def generate_html_report(cms, sensitive_data, found_files, errors, output_file, url, ip_address, language, certificate_info):
     # Define color mapping for each type
     type_color_mapping = {
@@ -242,7 +242,7 @@ def generate_html_report(cms, sensitive_data, found_files, errors, output_file, 
         'password': '#DC143C'      # Crimson
     }
 
-   
+    
     df_sensitive = pd.DataFrame(sensitive_data, columns=['Type', 'Value', 'File URL'])
     df_files = pd.DataFrame(found_files, columns=['Found Files'])
     df_errors = pd.DataFrame(errors, columns=['Error Message'])
@@ -336,6 +336,16 @@ def display_banner():
     print(colored(f.renderText('Page-Seeker'), 'cyan', attrs=['bold']))
     print(colored('by Shaked Wiessman', 'green'))
 
+
+def search_sensitive_info_in_file(file_url, timeout, base_ip):
+    try:
+        response = requests.get(file_url, timeout=timeout, verify=False)
+        content = response.text
+        sensitive_info = search_sensitive_info(content, base_ip)
+        return [(info_type, value, file_url) for info_type, value in sensitive_info]
+    except requests.RequestException as e:
+        return [("error", str(e), file_url)]
+
 # Main script execution
 if __name__ == "__main__":
     # Display the banner
@@ -354,19 +364,19 @@ if __name__ == "__main__":
     timeout = args.timeout
 
     try:
-        # Get the base IP address of the website
+        
         base_ip = socket.gethostbyname(urlparse(website_url).hostname)
 
-        # Identify the CMS
+        
         cms = identify_cms(website_url, timeout)
         print(colored(f"The website is using: {cms}", "blue"))
 
-        # Fetch files based on CMS
+        
         print(colored("Scanning for files...", "yellow"))
         found_files = fetch_dynamic_files(website_url, geckodriver_path)
         print(colored(f"Found {len(found_files)} files via dynamic scanning.", "green"))
 
-        # Perform fuzzing for additional files
+        
         print(colored("Performing fuzzing for additional files...", "yellow"))
         fuzzed_files = fuzz_for_files(website_url, cms, timeout)
         print(colored(f"Found {len(fuzzed_files)} files via fuzzing.", "green"))
@@ -389,16 +399,16 @@ if __name__ == "__main__":
         
         certificate_info = "Not implemented"
 
-        for file_url in all_found_files:
-            try:
-                response = requests.get(file_url, timeout=timeout, verify=False)
-                content = response.text
-                sensitive_info = search_sensitive_info(content, base_ip)
-                for info_type, value in sensitive_info:
+        
+        with ThreadPoolExecutor(max_workers=20) as executor:
+            results = executor.map(lambda url: search_sensitive_info_in_file(url, timeout, base_ip), all_found_files)
+
+        for result in results:
+            for info_type, value, file_url in result:
+                if info_type == "error":
+                    errors.append(value)
+                else:
                     sensitive_data.append((info_type, value, file_url))
-            except requests.RequestException as e:
-                errors.append(str(e))
-                print(colored(f"Error accessing {file_url}: {e}", "red"))
 
     except requests.RequestException as e:
         print(colored(f"Could not access the website: {e}", "red"))
@@ -411,4 +421,3 @@ if __name__ == "__main__":
 
     generate_html_report(cms, sensitive_data, all_found_files, errors, output_file, website_url, base_ip, language, certificate_info)
     print(colored(f"Report generated: {output_file}", "cyan"))
-
