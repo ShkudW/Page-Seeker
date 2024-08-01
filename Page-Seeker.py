@@ -15,10 +15,10 @@ from pyfiglet import Figlet
 import warnings
 from urllib3.exceptions import InsecureRequestWarning
 
-# Disable InsecureRequestWarning
+
 warnings.simplefilter('ignore', InsecureRequestWarning)
 
-# List of common CMS identifiers
+
 CMS_IDENTIFIERS = {
     'WordPress': {
         'headers': ['x-powered-by', 'x-pingback'],
@@ -52,7 +52,7 @@ CMS_IDENTIFIERS = {
     }
 }
 
-# Function to check for specific headers
+
 def check_headers(headers):
     for cms, details in CMS_IDENTIFIERS.items():
         for header in details['headers']:
@@ -60,7 +60,7 @@ def check_headers(headers):
                 return cms
     return None
 
-# Function to check for specific patterns in the content
+
 def check_patterns(content):
     for cms, details in CMS_IDENTIFIERS.items():
         for pattern in details['patterns']:
@@ -68,7 +68,7 @@ def check_patterns(content):
                 return cms
     return None
 
-# Function to check for specific files
+
 def check_files(url, timeout):
     for cms, details in CMS_IDENTIFIERS.items():
         for file in details['files']:
@@ -81,7 +81,7 @@ def check_files(url, timeout):
                 continue
     return None
 
-# Main function to identify the CMS
+
 def identify_cms(url, timeout):
     try:
         response = requests.get(url, timeout=timeout, verify=False)
@@ -108,7 +108,7 @@ def identify_cms(url, timeout):
         print(colored(f"Error accessing {url}: {e}", "red"))
         return "Error"
 
-# Setup Selenium WebDriver for Firefox
+
 def setup_driver(geckodriver_path):
     options = Options()
     options.add_argument("--headless")
@@ -118,13 +118,13 @@ def setup_driver(geckodriver_path):
     driver = webdriver.Firefox(service=Service(geckodriver_path), options=options)
     return driver
 
-# Fetch dynamic files using Selenium and Firefox
+
 def fetch_dynamic_files(url, geckodriver_path):
     driver = setup_driver(geckodriver_path)
     driver.get(url)
     time.sleep(3)  # Wait for the page to fully load
     
-    # Get all network requests
+    
     entries = driver.execute_script("return window.performance.getEntries();")
     
     found_files = set()
@@ -139,7 +139,7 @@ def fetch_dynamic_files(url, geckodriver_path):
     driver.quit()
     return list(found_files)
 
-# Function to perform fuzzing for additional files and directories
+
 def perform_request(url, timeout):
     try:
         response = requests.get(url, timeout=timeout, verify=False)
@@ -154,7 +154,7 @@ def fuzz_for_files(base_url, cms, timeout):
     extensions = ['.txt', '.html', '.js', '.css']
     fuzzing_dir = os.path.join(os.path.dirname(__file__), 'fuzzing')
 
-    # Determine the appropriate wordlist based on the CMS
+    
     if cms == 'WordPress':
         wordlist_file = os.path.join(fuzzing_dir, 'wordpress-fuzz.txt')
     elif cms == 'Joomla':
@@ -167,15 +167,15 @@ def fuzz_for_files(base_url, cms, timeout):
         with open(wordlist_file, 'r') as file:
             words = file.read().splitlines()
 
-        # Construct URLs to check based on CMS type
+        
         if cms in ['WordPress', 'Joomla']:
-            # Use words as they are without adding extensions
+            
             urls_to_check = [f"{base_url.rstrip('/')}/{word}" for word in words]
         else:
-            # Add extensions to words for general wordlist
+            
             urls_to_check = [f"{base_url.rstrip('/')}/{word}{ext}" for word in words for ext in extensions]
 
-        # Perform requests in parallel
+        
         with ThreadPoolExecutor(max_workers=10) as executor:
             results = list(executor.map(lambda url: perform_request(url, timeout), urls_to_check))
 
@@ -186,7 +186,7 @@ def fuzz_for_files(base_url, cms, timeout):
     
     return found_files
 
-# Search for sensitive information in the files
+
 def search_sensitive_info(content, base_ip):
     sensitive_info = []
 
@@ -218,19 +218,19 @@ def search_sensitive_info(content, base_ip):
 
     return sensitive_info
 
-# Function to detect website language
+
 def detect_language(content):
-    # Basic detection based on common language indicators
+    
     if "<html lang=\"en\"" in content.lower():
         return "English"
     elif "<html lang=\"he\"" in content.lower():
         return "Hebrew"
     elif "<html lang=\"es\"" in content.lower():
         return "Spanish"
-    # Add more languages as needed
+    
     return "Unknown"
 
-# Generate HTML report
+
 def generate_html_report(cms, sensitive_data, found_files, errors, output_file, url, ip_address, language, certificate_info):
     # Define color mapping for each type
     type_color_mapping = {
@@ -242,20 +242,20 @@ def generate_html_report(cms, sensitive_data, found_files, errors, output_file, 
         'password': '#DC143C'      # Crimson
     }
 
-    # Create DataFrames for display
+   
     df_sensitive = pd.DataFrame(sensitive_data, columns=['Type', 'Value', 'File URL'])
     df_files = pd.DataFrame(found_files, columns=['Found Files'])
     df_errors = pd.DataFrame(errors, columns=['Error Message'])
 
-    # Set output directory to 'Report' and ensure it exists
+    
     output_dir = os.path.join(os.path.dirname(__file__), 'Report')
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    # Define path for external CSS file
+    
     css_path = "report.css"
 
-    # Generate HTML content
+    
     html_content = f"""
     <html>
     <head>
@@ -284,7 +284,7 @@ def generate_html_report(cms, sensitive_data, found_files, errors, output_file, 
             <h2>Sensitive Information</h2>
     """
 
-    # Add collapsible sections for each type
+    
     for info_type, color in type_color_mapping.items():
         relevant_data = df_sensitive[df_sensitive['Type'].str.lower() == info_type]
         if not relevant_data.empty:
@@ -325,12 +325,12 @@ def generate_html_report(cms, sensitive_data, found_files, errors, output_file, 
     </html>
     """
 
-    # Write HTML content to file within 'Report' directory
+    
     output_path = os.path.join(output_dir, output_file)
     with open(output_path, 'w') as file:
         file.write(html_content)
 
-# Function to display the banner
+
 def display_banner():
     f = Figlet(font='slant')
     print(colored(f.renderText('Page-Seeker'), 'cyan', attrs=['bold']))
@@ -371,13 +371,13 @@ if __name__ == "__main__":
         fuzzed_files = fuzz_for_files(website_url, cms, timeout)
         print(colored(f"Found {len(fuzzed_files)} files via fuzzing.", "green"))
 
-        # Combine all found files
+        
         all_found_files = list(set(found_files + fuzzed_files))
 
         sensitive_data = []
         errors = []
 
-        # Attempt to fetch and parse main page content for language and certificate
+        
         try:
             main_page_response = requests.get(website_url, timeout=timeout, verify=False)
             main_page_content = main_page_response.text
@@ -386,7 +386,7 @@ if __name__ == "__main__":
             print(colored(f"Error accessing main page: {e}", "red"))
             language = "Unknown"
 
-        # Placeholder for certificate info (for simplicity)
+        
         certificate_info = "Not implemented"
 
         for file_url in all_found_files:
