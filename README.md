@@ -43,7 +43,7 @@ It supports scanning websites built with various CMS platforms and searching for
 
 1. Clone the repository:
     ```
-    git clone <repository-url>
+    git clone https://github.com/ShkudW/Page-Seeker.git
     ```
 2. Apply full permissions to the tool's directory:
     ```
