@@ -74,15 +74,6 @@ python3 Web-Seeker.py -url https://target.com -outfile FileName.html -geckodrive
 '-geckodriver' /usr/local/bin/geckodriver -> !!It is required to use this flag!!
 
 
-## Others
-
-
-If during the scan the tool returns the following error:
-
-    Eror accessing https://taget.com/somefile.js : HTTPConnectionPool(host='target', port=443): Max retries exceeded with url: /somefile.js (Caused by ConnectTimeoutError(<urllib3.connection.HTTPConnection object at 0x7f66e4515890>, 'Connection to target timed out. (connect timeout=10)'))
-
-!!there may be sensitive information in the file that the tool is trying to read, and you should run the tool again!!
-
 
 ## WordLists:
 
